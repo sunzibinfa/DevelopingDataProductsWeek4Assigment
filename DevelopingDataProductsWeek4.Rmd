@@ -1,0 +1,46 @@
+---
+title: "Developing Data Products Week 4 Assignment"
+author: "XH"
+date: "5/15/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## INTRODUCTION
+
+- To show a Shiny App that display plots of major European Stock Indices from 1991 to 1998 using the EuStockMarkets data set in R
+- Users have the option to set two parameters:
+       - Stock Index to display
+       - Type of graph: Levels or Daily Differences
+
+## SHINY APP: HOW IT WORKS
+
+- User specify which index to display.  Have 5 options:  
+       1. ALL: All indices  
+       2. DAX  
+       3. SMI  
+       4. CAC  
+       5. FTSE  
+- User also specify what type of value to display in graph.  Two options:  
+       1. LEVEL: Daily Closing Value  
+       2. DAILY DIFFERENCES: The daily differences in closing value   
+- Using these information, a plot is displayed
+
+## EXAMPLE PLOT
+
+- If DAX and LEVEL options are chosen, the following chart displays
+
+```{r exampleplot}
+data(EuStockMarkets)
+EuStockMarkets <- EuStockMarkets[,1]
+plot(EuStockMarkets, main='Plot of Stock Index Level', xlab='Date', ylab='Value')
+```
+
+## CONCLUSION
+
+- Quick way for users to see evolution of stock indices over time 
+- Shiny App is able to be adapted to include other stock indices and time periods
+- Other types of graphs can be added to the Shiny App
