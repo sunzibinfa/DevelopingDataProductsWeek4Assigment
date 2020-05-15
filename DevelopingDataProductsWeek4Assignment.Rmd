@@ -1,0 +1,101 @@
+---
+title: "Developing Data Products Week 4 Assignment"
+author: "XH"
+date: "5/15/2020"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## INTRODUCTION
+
+- To show a Shiny App that display plots of major European Stock Indices from 1991 to 1998
+- Users have the option to set two parameters:
+- Stock Index to display
+- Type of graph: Levels or Daily Differences
+
+
+## SHINY APP
+
+```{r graphs}
+library(shiny)
+# Read in data set and process it
+data(EuStockMarkets)
+EuStockMarkets2 <- diff(EuStockMarkets)
+
+shinyApp(
+# Define UI for application that draws a line chart
+ui = (fluidPage(
+
+    # Application title
+    titlePanel("Graphs of Major European Stock Indices: 1991-1998"),
+    helpText("This Shiny App uses the EuStockMarkets data set from R to plot major European stock indices from 1991 to 1998. User is 
+                 to provide two inputs. The first is to choose which stock index to display.  The second is to choose what type of graph
+                 to output. Users can either graph the daily closing values or the daily difference when compared to the previous day."),
+    # Sidebar with a radio button to select index and type of graph
+    sidebarLayout(
+                radioButtons("index", "INDEX:",
+                     c("ALL" = "ALL",
+                       "DAX" = "DAX",
+                       "SMI" = "SMI",
+                       "CAC" = "CAC",
+                       "FTSE" = "FTSE")),
+        radioButtons("type", "TYPE OF GRAPH:",
+                    c("LEVEL" = "level",
+                      "DAILY DIFFERENCES" = "diff"))
+    ),
+        # Show a plot of the Chosen Stock Index
+        mainPanel(
+            plotOutput("indexPlot")
+        )
+)),
+
+# Define server logic required to draw a histogram
+server = function(input, output) {
+
+    output$indexPlot <- renderPlot({
+
+        # Subset data based on user inputs
+        if (input$type == 'level') {
+            EuStockMarkets3 <- EuStockMarkets
+        }
+        else if (input$type == 'diff') {
+            EuStockMarkets3 <- EuStockMarkets2
+        }
+        if (input$index == 'DAX') {
+            EuStockMarkets3 <- EuStockMarkets3[,1]
+        } 
+        else if (input$index == 'SMI') {
+            EuStockMarkets3 <- EuStockMarkets3[,2]
+        } 
+        else if (input$index == 'CAC') {
+            EuStockMarkets3 <- EuStockMarkets3[,3]
+        } 
+        else if (input$index == 'FTSE') {
+            EuStockMarkets3 <- EuStockMarkets3[,4]
+        } 
+
+        # draw the graph
+        if (input$type == 'level') {
+            plot(EuStockMarkets3, main='Plot of Stock Index Level', xlab='Date', ylab='Value')
+        }
+        else {
+            plot(EuStockMarkets3, main=paste('Plot of Daily Differences', xlab='Date', ylab='Value'))
+        }
+    })
+
+}
+)
+```
+
+## CONCLUSION
+
+- Quick way for users to see evolution of stock indices over time 
+- Shiny App is able to be adapted to include other stock indices and time periods
+- Other types of graphs can be added to the Shiny App
+
+
+
